@@ -7,18 +7,6 @@ pipeline {
         sh "echo Build: ${env.BUILD_NUMBER}"
       }
     }
-    stage('Install') {
-      agent {
-        docker {
-          image 'python:3.6-slim'
-        }
-      }
-      steps {
-        sh '''
-            pip install -r requirements.txt flake8 mypy 
-           '''
-      }
-    }
     stage('CI - Lint') {
       agent {
         docker {
@@ -27,6 +15,7 @@ pipeline {
       }
       steps {
         sh '''
+            pip install -r requirements.txt flake8 mypy
             make lint
            '''
       }
