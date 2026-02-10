@@ -7,7 +7,7 @@ pipeline {
         sh "echo Build: ${env.BUILD_NUMBER}"
       }
     }
-    stage('Test') {
+    stage('Install') {
       agent {
         docker {
           image 'python:3.6-slim'
@@ -15,8 +15,30 @@ pipeline {
       }
       steps {
         sh '''
-            python --version
-            pip install --upgrade pip
+            pip install -r requirements.txt
+           '''
+      }
+    }
+    stage('CI - Lint') {
+      agent {
+        docker {
+          image 'python:3.6-slim'
+        }
+      }
+      steps {
+        sh '''
+            make lint
+           '''
+      }
+    }
+    stage('CI - Test') {
+      agent {
+        docker {
+          image 'python:3.6-slim'
+        }
+      }
+      steps {
+        sh '''
             pip install -r requirements.txt
             pytest
            '''
