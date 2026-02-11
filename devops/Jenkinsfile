@@ -11,7 +11,11 @@ pipeline {
     timestamps()
     disableConcurrentBuilds()
   }
-
+  parameters {
+  }
+  environment {
+    - IMAGE_NAME = "python:3.6-slim:${env.BUILD_NUMBER}"
+  }
   stages {
     stage('Info') {
       steps {
@@ -50,6 +54,7 @@ pipeline {
     stage('CI - Build image') {
       steps {
         script {
+            sh "echo CI_IMAGE_NAME: ${env.IMAGE_NAME}"
             docker.build(env.IMAGE_NAME, "-f devops/Dockerfile .")
         }
       }
