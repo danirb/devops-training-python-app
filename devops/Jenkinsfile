@@ -6,6 +6,12 @@ def runInDocker(String image, Closure body) {
 
 pipeline {
   agent any
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+  }
+
   stages {
     stage('Info') {
       steps {
@@ -34,9 +40,17 @@ pipeline {
             sh '''
                 pip install --upgrade pip
                 pip install -r requirements.txt
-                pytest
+                pytest -q
                '''
           }
+        }
+      }
+    }
+
+    stage('CI - Build image') {
+      steps {
+        script {
+            docker.build(env.IMAGE_NAME, "-f devops/Dockerfile .")
         }
       }
     }
