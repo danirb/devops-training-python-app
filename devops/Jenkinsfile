@@ -11,8 +11,6 @@ pipeline {
     timestamps()
     disableConcurrentBuilds()
   }
-  parameters {
-  }
   environment {
     IMAGE_NAME = "python-ci-tools:${env.BUILD_NUMBER}"
   }
