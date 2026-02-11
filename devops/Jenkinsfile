@@ -14,7 +14,7 @@ pipeline {
   parameters {
   }
   environment {
-    - IMAGE_NAME = "python:3.6-slim:${env.BUILD_NUMBER}"
+    - IMAGE_NAME = "python-ci-tools:${env.BUILD_NUMBER}"
   }
   stages {
     stage('Info') {
@@ -54,7 +54,9 @@ pipeline {
     stage('CI - Build image') {
       steps {
         script {
-            sh "echo CI_IMAGE_NAME: ${env.IMAGE_NAME}"
+            env.IMAGE_NAME = "python-ci-tools:${env.BUILD_NUMBER}"
+            sh "echo CI_IMAGE_NAME: ${env.CI_IMAGE_NAME}"
+            sh "echo IMAGE_NAME: ${env.IMAGE_NAME}"
             docker.build(env.IMAGE_NAME, "-f devops/Dockerfile .")
         }
       }
