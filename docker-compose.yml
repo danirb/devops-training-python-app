@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   app:
     image: danirb/devops-training-python-app:0.0.1
