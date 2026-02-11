@@ -1,3 +1,9 @@
+def runInDocker(String image, Closure body) {
+  docker.image(image).inside {
+    body()
+  }
+}
+
 pipeline {
   agent any
   stages {
@@ -8,32 +14,30 @@ pipeline {
       }
     }
     stage('CI - Lint') {
-      agent {
-        docker {
-          image 'python:3.6-slim'
-        }
-      }
       steps {
-        sh '''
-            apt-get update && apt-get install -y make
-            pip install --upgrade pip
-            pip install -r requirements.txt flake8 mypy
-            make lint
-           '''
+        script {
+          runInDocker('python:3.6-slim') {
+            sh '''
+                apt-get update && apt-get install -y make
+                pip install --upgrade pip
+                pip install -r requirements.txt flake8 mypy
+                make lint
+               '''
+          }
+        }
       }
     }
     stage('CI - Test') {
-      agent {
-        docker {
-          image 'python:3.6-slim'
-        }
-      }
       steps {
-        sh '''
-            pip install --upgrade pip
-            pip install -r requirements.txt
-            pytest
-           '''
+        script {
+          runInDocker('python:3.6-slim') {
+            sh '''
+                pip install --upgrade pip
+                pip install -r requirements.txt
+                pytest
+               '''
+          }
+        }
       }
     }
   }
