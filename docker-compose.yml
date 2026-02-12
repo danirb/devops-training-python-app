@@ -1,9 +1,9 @@
 services:
   app:
-    image: danirb/devops-training-python-app:0.0.1
-    #build: 
-    #  context: .
-    #  dockerfile: devops/Dockerfile
+    image: contrerasadr/devops-training-python-app:0.0.1
+    build:
+      context: .
+      dockerfile: devops/Dockerfile
     container_name: my-flask-app-dc
     restart: unless-stopped
     networks:
@@ -19,7 +19,6 @@ services:
     ports:
       - "5001:5000"
 
-  
   db:
     image: postgres:16-alpine
     container_name: my-flask-app-db
@@ -39,6 +38,5 @@ services:
 networks:
   scalian_training:
     driver: bridge
-  
 volumes:
   dbdata:
