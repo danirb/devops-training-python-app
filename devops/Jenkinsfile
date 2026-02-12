@@ -57,7 +57,15 @@ pipeline {
       }
     }
     stage('CD') {
+        when {
+            anyOf {
+            expression { return params.RUN_CD }
+            branch 'develop'
+            branch 'master'
+            }
+        }
         steps {
+            echo "CD habilitado: RUN_CD=${params.RUN_CD}, branch=${env.BRANCH_NAME}"
             script {
                 sh 'docker compose up -d'
                 sh 'sleep 5'
